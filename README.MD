@@ -1,59 +1,129 @@
-# gulp-avif-webp-html
+# gulp-avif-webp-html-universal
 
-> Gulp extension, replace html element `<img>` to `<picture>` with [`gulp-avif-webp-html`](https://github.com/powerrampage/gulp-avif-webp-html)
+> Gulp extension, replace html element `<img>` to `<picture>` with [`gulp-avif-webp-html-universal`](https://github.com/darkoton/gulp-avif-webp-html-universal)
 
-## Install
+Based on:
+https://github.com/powerrampage/gulp-avif-webp-html
+
+Modified and improved version by darkoton
+
+## ✨ Features
+- Converts ```<img>``` → ```<picture>```
+- Optional AVIF support
+- Optional WebP support
+- Works only for .jpg, .jpeg, .png
+- Keeps original ```<img>``` fallback
+- Easy to configure per project
+
+## 📦 Install
 
 ```
-$ npm i --save-dev gulp-avif-webp-html 
+$ npm i --save-dev gulp-avif-webp-html-universal 
 ```
 
 
-## Usage
+## 🚀 Usage
 
 Use this into your `gulpfile.js`:
 
 ```js
 const gulp = require('gulp')
-const avifWebpHTML = require("gulp-avif-webp-html")
+const avifWebpHTML = require("gulp-avif-webp-html-universal")
 
 function html() {
-    return src('source/*.html')
-        .pipe(avifWebpHTML())
-        .pipe(gulp.dest('dist/'))
+  return gulp.src('src/**/*.html')
+    .pipe(avifWebpHTML(
+      { avif: true, webp: true }
+    ))
+    .pipe(gulp.dest('dist/'));
 }
 
 exports.html = html;
 ```
 
-## Example
+## ⚙️ Usage
+
+```js
+avifWebpHTML(options)
+```
+
+| Option 1 | Type     | Default  | Description |
+| -------- | -------- | -------- | --------    |
+| avif   | boolean   | true   | Enable AVIF output      |
+| webp   | boolean   | true   | Enable WebP output      |
+
+## 🧪 Example
+### Input
+```html
+<img src="img/photo.jpg" alt="image">
+```
+
+### Output (default config)
+```html
+<picture>
+  <source srcset="img/photo.avif" type="image/avif">
+  <source srcset="img/photo.webp" type="image/webp">
+  <img src="img/photo.jpg" alt="image">
+</picture>
+
+```
+### Output (AVIF only)
+```js
+avifWebpHTML({ avif: true, webp: false })
+```
 
 ```html
-// Input
-<img src="img/image.jpg" alt="image">
-```
-```html
-// Output
 <picture>
-    <source srcset="img/image.avif" type="image/avif">
-    <source srcset="img/image.webp" type="image/webp">
-    <img src="img/image.jpg" alt="image">
+  <source srcset="img/photo.avif" type="image/avif">
+  <img src="img/photo.jpg" alt="image">
 </picture>
 ```
 
-**Support file extensions:**  `.png, .jpg, .jpeg`
+## 📁 Supported formats
+- .jpg
+- .jpeg 
+- .png
 
-### The picture element
-For now, you can still use the format in its almost complete glory with the native `<picture>` element in HTML. Why, you may ask? Well, the `<picture>` element allows progressive support. You can simply drop all image files in the order in which you want to load them. Your visitors' browsers load only one image at a time, which reduces the load on the server. Besides, you don't need a script to process multiple images.
-Currently **96.5% of browsers support the** [`picture element`](https://caniuse.com/?search=picture)
+## 🧠 How it works
+The plugin scans HTML files and:
 
-✔ *Does not download more than one image at a time*
+1. Finds ```<img>``` tags
+2. Extracts src
+3. Generates:
+    - avif version (optional)
+    - webp version (optional)
+4. Wraps everything into ```\```<picture>```
 
-✔ *Native support for selecting the most appropriate image*
+## 🌐 Why ```<picture>```?
 
-✔ *96% browser support and automatic fallback*
+The ```<picture>``` element allows modern browsers to automatically choose the best image format.
 
-✔ *Getting this implemented is easy and straightforward*
+Benefits:
+- 🚀 Smaller image sizes (AVIF / WebP)
+- ⚡ Faster page load
+- 📱 Better mobile performance
+- 🔄 Automatic fallback to original ```<img>```
+- 🌍 Wide browser support
 
+## 📊 Browser support?
 
-<img src="https://raw.githubusercontent.com/powerrampage/Test-Avif/main/avif-result.png" alt="result" />
+The ```<picture>``` element is supported in all modern browsers.
+
+👉 https://caniuse.com/picture
+
+## ⚠️ Notes
+- Does not process SVG
+- Does not modify already existing ```<picture>``` blocks
+- Works line-by-line (HTML structure sensitive)
+
+## 📜 License
+
+MIT
+
+## 👤 Author
+
+Original plugin:
+powerrampage — https://github.com/powerrampage/gulp-avif-webp-html
+
+Modified version:
+darkoton - https://github.com/darkoton/gulp-avif-webp-html-universal

@@ -1,14 +1,18 @@
 "use strict";
-/*      gulp-avif-webp-html
-© Copyright (04.11.2021) by powerrampage
-Github: github.com/powerrampage/
-Telegram: t.me/powerrampage
+/*      gulp-avif-webp-html-universal
+  Original:
+  © 04.11.2021 powerrampage
+  github.com/powerrampage/gulp-avif-webp-html
+
+  Modified by:
+  darkoton
+  github.com/darkoton/gulp-avif-webp-html-universal
 */
-const pluginName = 'gulp-avif-webp-html'
+const pluginName = 'gulp-avif-webp-html-universal'
 const gutil = require('gulp-util')
 const PluginError = gutil.PluginError
 const through = require('through2')
-module.exports = function (extensions) {
+module.exports = function ({webp = true, avif = true}, extensions) {
     var extensions = extensions || ['.jpg', '.png', '.jpeg']
     return through.obj(function (file, enc, cb) {
         if (file.isNull()) {
@@ -40,30 +44,11 @@ module.exports = function (extensions) {
                             } else {
                                 let newWebpUrl = newAvifUrl.replace(ext, '.webp');
                                 newAvifUrl = newAvifUrl.replace(ext, '.avif')
-                                switch (ext) {
-                                    case '.jpg':
-                                        line = '<picture>' +
-                                            '<source srcset="' + newAvifUrl + '" type="image/avif">' +
-                                            '<source srcset="' + newWebpUrl + '" type="image/webp">' +
-                                            imgTag +
-                                            '</picture>'
-                                        break;
-
-                                    case '.png':
-                                        line = '<picture>' +
-                                            '<source srcset="' + newAvifUrl + '" type="image/avif">' +
-                                            '<source srcset="' + newWebpUrl + '" type="image/webp">' +
-                                            imgTag +
-                                            '</picture>'
-                                        break;
-
-                                    default:
-                                        line = '<picture>' +
-                                            '<source srcset="' + newAvifUrl + '" type="image/avif">' +
-                                            '<source srcset="' + newWebpUrl + '" type="image/webp">' +
-                                            imgTag +
-                                            '</picture>'
-                                }
+                                line = `<picture>
+                                    ${avif ? `<source srcset="${newAvifUrl}" type="image/avif">` : ''}
+                                    ${webp ? `<source srcset="${newWebpUrl}" type="image/webp">` : ''}
+                                    ${imgTag}
+                                    </picture>`
                             }
                         });
                         return line

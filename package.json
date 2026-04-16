@@ -1,16 +1,21 @@
 {
-	"name": "gulp-avif-webp-html",
-	"version": "1.0.0",
-	"description": "Gulp extension, replace html element <img> to <picture> for AVIF and WEBP  support",
+	"name": "gulp-avif-webp-html-universal",
+	"version": "0.1.0",
+	"description": "Modified gulp extension with configuration, replace html element <img> to <picture> for AVIF and WEBP support",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/powerrampage/gulp-avif-webp-html.git"
+		"url": "git+https://github.com/darkoton/gulp-avif-webp-html-universal.git"
 	},
 	"keywords": [
+		"gulpplugin",
+		"gulp",
+		"html",
+		"image",
+		"optimization",
 		"avif",
 		"webp",
 		"source",
@@ -18,12 +23,20 @@
 		"img-to-picture",
 		"type-avif",
 		"type-webp",
-		"html-tag-picture"
+		"html-tag-picture",
+		"no-svg"
 	],
-	"author": "powerrampage",
+	"author": "powerrampage (original), darkoton (modifications)",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/powerrampage/gulp-avif-webp-html/issues"
+		"url": "https://github.com/darkoton/gulp-avif-webp-html-universal/issues"
 	},
-	"homepage": "https://github.com/powerrampage/gulp-avif-webp-html#readme"
+	"homepage": "https://github.com/darkoton/gulp-avif-webp-html-universal#readme",
+	"engines": {
+  		"node": ">=18"
+	},
+	"files": [
+	"index.js",
+	"README.md"
+	]
 }
