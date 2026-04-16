@@ -1,6 +1,6 @@
 {
 	"name": "gulp-avif-webp-html-universal",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Modified gulp extension with configuration, replace html element <img> to <picture> for AVIF and WEBP support",
 	"main": "index.js",
 	"scripts": {
@@ -33,10 +33,10 @@
 	},
 	"homepage": "https://github.com/darkoton/gulp-avif-webp-html-universal#readme",
 	"engines": {
-  		"node": ">=18"
+		"node": ">=18"
 	},
 	"files": [
-	"index.js",
-	"README.md"
+		"index.js",
+		"README.md"
 	]
 }
