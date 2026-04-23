@@ -1,6 +1,6 @@
 {
 	"name": "gulp-avif-webp-html-universal",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Modified gulp extension with configuration, replace html element <img> to <picture> for AVIF and WEBP support",
 	"main": "index.js",
 	"scripts": {
