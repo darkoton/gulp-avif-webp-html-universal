@@ -13,7 +13,7 @@ const gutil = require('gulp-util')
 const PluginError = gutil.PluginError
 const through = require('through2')
 module.exports = function ({webp = true, avif = true}, extensions) {
-    var extensions = extensions || ['.jpg', '.png', '.jpeg']
+    extensions = extensions || ['.jpg', '.png', '.jpeg']
     return through.obj(function (file, enc, cb) {
         if (file.isNull()) {
             cb(null, file)
@@ -23,41 +23,41 @@ module.exports = function ({webp = true, avif = true}, extensions) {
             cb(new PluginError(pluginName, 'Streaming not supported'))
             return
         }
-        try {
-            let inPicture = false
-            const data = file.contents
-                .toString()
-                .split('\n')
-                .map(function (line) {
-                    if (line.indexOf('<picture') + 1) inPicture = true
-                    if (line.indexOf('</picture') + 1) inPicture = false
-                    if (line.indexOf('<img') + 1 && !inPicture) {
-                        let Re = /<img([^>]+)src=[\"\'](\S+)[\"\']([^>\/]+)\/?>/gi
-                        let regexpArray = Re.exec(line)
-                        let imgTag = regexpArray[0]
-                        let srcImage = regexpArray[2]
-                        let newAvifUrl = srcImage
-                        if (srcImage.indexOf('.avif') + 1) return line
-                        extensions.forEach(ext => {
-                            if (srcImage.indexOf(ext) == -1) {
-                                return line;
-                            } else {
-                                let newWebpUrl = newAvifUrl.replace(ext, '.webp');
-                                newAvifUrl = newAvifUrl.replace(ext, '.avif')
-                                line = `<picture>
-                                    ${avif ? `<source srcset="${newAvifUrl}" type="image/avif">` : ''}
-                                    ${webp ? `<source srcset="${newWebpUrl}" type="image/webp">` : ''}
-                                    ${imgTag}
-                                    </picture>`
-                            }
-                        });
-                        return line
-                    }
-                    return line
-                })
-                .join('\n')
-            file.contents = new Buffer.from(data)
+           try {
+            let html = file.contents.toString()
+
+            const Re = /<img[\s\S]*?src=["']([^"']+)["'][\s\S]*?>/gi
+
+            html = html.replace(Re, (imgTag, srcImage) => {
+
+                // пропускаем если уже avif
+                if (srcImage.includes('.avif')) return imgTag
+
+                // пропускаем если внутри picture
+                const before = html.slice(0, html.indexOf(imgTag))
+                const openPicture = before.lastIndexOf('<picture')
+                const closePicture = before.lastIndexOf('</picture')
+
+                if (openPicture > closePicture) {
+                    return imgTag
+                }
+
+                const ext = extensions.find(e => srcImage.endsWith(e))
+                if (!ext) return imgTag
+
+                const newAvifUrl = srcImage.replace(ext, '.avif')
+                const newWebpUrl = srcImage.replace(ext, '.webp')
+
+                return `<picture>
+    ${avif ? `<source srcset="${newAvifUrl}" type="image/avif">` : ''}
+    ${webp ? `<source srcset="${newWebpUrl}" type="image/webp">` : ''}
+    ${imgTag}
+</picture>`
+            })
+
+            file.contents = Buffer.from(html)
             this.push(file)
+
         } catch (err) {
             this.emit('error', new PluginError(pluginName, err))
         }
